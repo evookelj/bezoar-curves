@@ -2,10 +2,18 @@ use std::fs::File;
 use std::io::BufReader;
 use std::io::BufRead;
 use std::string::String;
-use matrix::Gmatrix;
+
+use gmatrix::Gmatrix;
+use gmatrix::make_scale;
+use gmatrix::make_trans;
+use gmatrix::make_rot_x;
+use gmatrix::make_rot_y;
+use gmatrix::make_rot_z;
+
 use display::disp;
 use display::clear_screen;
 use display::save_ppm;
+
 use draw::draw_lines;
 
 pub fn parse_file(name: &str, transf: &mut Gmatrix, edges: &mut Gmatrix, screen: &mut [[[u32; 3]; 500]; 500]) {
@@ -57,9 +65,9 @@ pub fn parse_file(name: &str, transf: &mut Gmatrix, edges: &mut Gmatrix, screen:
 			"rotate" => {
 				let mut rot = Gmatrix::new();
 				match vec[0].trim() {
-					"x" => rot = edges.make_rotX(vec[1].parse().unwrap()),
-					"y" => rot = edges.make_rotY(vec[1].parse().unwrap()),
-					"z" => rot = edges.make_rotZ(vec[1].parse().unwrap()),
+					"x" => rot = edges.make_rot_x(vec[1].parse().unwrap()),
+					"y" => rot = edges.make_rot_y(vec[1].parse().unwrap()),
+					"z" => rot = edges.make_rot_z(vec[1].parse().unwrap()),
 					_ => ()
 				}
 				rot.edit_mult(transf);

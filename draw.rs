@@ -1,4 +1,4 @@
-use matrix::Gmatrix;
+use gmatrix::Gmatrix;
 use display::plot;
 
 fn line1(x0: i32, y0: i32, x1: i32, y1: i32, screen: &mut [[[u32; 3]; 500]; 500], color: [u32; 3]) {
