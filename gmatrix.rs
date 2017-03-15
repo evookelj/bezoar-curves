@@ -77,6 +77,10 @@ impl Gmatrix {
 		return ret;
 	}
 
+	pub fn edit_mult(&self, o: &mut Gmatrix) {
+		o.data = self.m_mult(o).data;
+	}
+
 	pub fn s_mult(&self, s: f32) -> Gmatrix {
 		let mut ret = Gmatrix::new();
 		for r in 0..self.rlen() {
@@ -158,7 +162,7 @@ pub fn make_rot_z(theta: f32) -> Gmatrix {
 	return r;
 }
 
-pub fn get_hermite_c(givens: &Gmatrix) -> Gmatrix {
+pub fn get_hermite(givens: &Gmatrix) -> Gmatrix {
 	//make hermite inverse Matrix
 	let mut h = Gmatrix::new();
 
@@ -183,7 +187,7 @@ pub fn get_hermite_c(givens: &Gmatrix) -> Gmatrix {
 
 }
 
-pub fn get_bezier_c(givens: &Gmatrix) -> Gmatrix {
+pub fn get_bezier(givens: &Gmatrix) -> Gmatrix {
 	//make bezier matrix
 	let mut b = Gmatrix::new();
 

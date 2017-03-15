@@ -45,7 +45,7 @@ pub fn parse_file(name: &str, transf: &mut Gmatrix, edges: &mut Gmatrix, screen:
  				last = String::from("");
 			}
 			"scale" => {
-				let scale = edges.make_scale(
+				let scale = make_scale(
 					vec[0].parse().unwrap(),
 					vec[1].parse().unwrap(),
 					vec[2].parse().unwrap()
@@ -54,7 +54,7 @@ pub fn parse_file(name: &str, transf: &mut Gmatrix, edges: &mut Gmatrix, screen:
 				last = String::from("");
 			}
 			"move" => {
-				let trans = edges.make_trans(
+				let trans = make_trans(
 					vec[0].parse().unwrap(),
 					vec[1].parse().unwrap(),
 					vec[2].parse().unwrap()
@@ -65,9 +65,9 @@ pub fn parse_file(name: &str, transf: &mut Gmatrix, edges: &mut Gmatrix, screen:
 			"rotate" => {
 				let mut rot = Gmatrix::new();
 				match vec[0].trim() {
-					"x" => rot = edges.make_rot_x(vec[1].parse().unwrap()),
-					"y" => rot = edges.make_rot_y(vec[1].parse().unwrap()),
-					"z" => rot = edges.make_rot_z(vec[1].parse().unwrap()),
+					"x" => rot = make_rot_x(vec[1].parse().unwrap()),
+					"y" => rot = make_rot_y(vec[1].parse().unwrap()),
+					"z" => rot = make_rot_z(vec[1].parse().unwrap()),
 					_ => ()
 				}
 				rot.edit_mult(transf);
