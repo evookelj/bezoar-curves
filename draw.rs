@@ -102,3 +102,7 @@ pub fn draw_lines(gm: &mut Gmatrix, screen: &mut [[[u32; 3]; 500]; 500], color: 
 		i += 2;
 	}
 }
+
+pub fn add_curve(x0:i32,x1:i32,x1:i32,y1:i32,a5:i32,a6:i32,a7:i32,a8:i32,type:&str) {
+	println!("drawing a curve!");
+}

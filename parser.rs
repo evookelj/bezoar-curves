@@ -15,6 +15,7 @@ use display::clear_screen;
 use display::save_ppm;
 
 use draw::draw_lines;
+use draw::add_curve;
 
 pub fn parse_file(name: &str, transf: &mut Gmatrix, edges: &mut Gmatrix, screen: &mut [[[u32; 3]; 500]; 500]) {
 	let f = File::open(name).unwrap();
@@ -22,6 +23,7 @@ pub fn parse_file(name: &str, transf: &mut Gmatrix, edges: &mut Gmatrix, screen:
 	let mut last = String::from("");
 	let mut l: String;
 	for line in file.lines() {
+		println!("last: {} this: {}", last, line);
 		l = line.unwrap();
 
 		let split = l.split(" ");
@@ -73,7 +75,41 @@ pub fn parse_file(name: &str, transf: &mut Gmatrix, edges: &mut Gmatrix, screen:
 				rot.edit_mult(transf);
 				last = String::from("");
 			}
-			_ => {
+			"circle" => {
+				add_circle(&edges,
+					vec[0].parse().unwrap(),
+					vec[1].parse().unwrap(),
+					vec[2].parse().unwrap(),
+					vec[3].parse().unwrap());
+				last = String::from("");
+			}
+			"hermite" => {
+				add_curve(&edges,
+					vec[0].parse().unwrap(),
+					vec[1].parse().unwrap(),
+					vec[2].parse().unwrap(),
+					vec[3].parse().unwrap(),
+					vec[4].parse().unwrap(),
+					vec[5].parse().unwrap(),
+					vec[6].parse().unwrap(),
+					vec[7].parse().unwrap(),
+					"h");
+				last = String::from("");
+			}
+			"bezier" => {
+				add_curve(&edges,
+					vec[0].parse().unwrap(),
+					vec[1].parse().unwrap(),
+					vec[2].parse().unwrap(),
+					vec[3].parse().unwrap(),
+					vec[4].parse().unwrap(),
+					vec[5].parse().unwrap(),
+					vec[6].parse().unwrap(),
+					vec[7].parse().unwrap(),
+					"b");
+				last = String::from("");
+			}
+ 			_ => {
 				match l.trim() {
 				"ident" => {
 					let g = edges.identity();
