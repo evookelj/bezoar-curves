@@ -1,4 +1,7 @@
 use gmatrix::Gmatrix;
+use gmatrix::get_bezier;
+use gmatrix::get_hermite;
+
 use display::plot;
 
 fn line1(x0: i32, y0: i32, x1: i32, y1: i32, screen: &mut [[[u32; 3]; 500]; 500], color: [u32; 3]) {
@@ -91,6 +94,9 @@ fn draw_line(x0: i32, y0: i32, x1: i32, y1: i32, screen: &mut [[[u32; 3]; 500]; 
 
 pub fn draw_lines(gm: &mut Gmatrix, screen: &mut [[[u32; 3]; 500]; 500], color: [u32; 3]) {
 	let mut i = 0;
+	if gm.clen()<1 {
+		return;
+	}
 	while i<gm.clen()-1 {
 		draw_line(
 			gm.get_val(0,i) as i32, //x0 
@@ -103,6 +109,28 @@ pub fn draw_lines(gm: &mut Gmatrix, screen: &mut [[[u32; 3]; 500]; 500], color: 
 	}
 }
 
-pub fn add_curve(x0:i32,x1:i32,x1:i32,y1:i32,a5:i32,a6:i32,a7:i32,a8:i32,type:&str) {
-	println!("drawing a curve!");
+pub fn paramet(edges: &mut Gmatrix, fx: &Fn(f32) -> f32, fy: &Fn(f32) -> f32, step: f32) {
+	println!("{}", step);
+}
+
+pub fn add_curve(edges: &mut Gmatrix, x0:f32,y0:f32,x1:f32,y1:f32,a5:f32,a6:f32,a7:f32,a8:f32,tp:&str) {
+	let mut giv = Gmatrix::new();
+	let c;
+	giv.add_val(0,x0);
+	giv.add_val(1,x1);
+	if (tp=="b") {
+		giv.add_val(2,a5);
+		giv.add_val(3,a7);
+		c = get_bezier(&giv);
+	} else {
+		giv.add_val(2,a6/a5);
+		giv.add_val(3,a8/a7);
+		c = get_hermite(&giv);
+	}
+	//giv.print();
+	c.print();
+}
+
+pub fn add_circle(edges: &mut Gmatrix, cx: f32, cy: f32, cz: f32, r: f32) {
+	println!("drawing circle!");
 }
