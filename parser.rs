@@ -24,7 +24,6 @@ pub fn parse_file(name: &str, transf: &mut Gmatrix, edges: &mut Gmatrix, screen:
 	let mut last = String::from("");
 	let mut l: String;
 	for line in file.lines() {
-		println!("last: {:?} this: {:?}", last, line);
 		l = line.unwrap();
 
 		let split = l.split(" ");

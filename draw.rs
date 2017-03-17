@@ -109,8 +109,31 @@ pub fn draw_lines(gm: &mut Gmatrix, screen: &mut [[[u32; 3]; 500]; 500], color: 
 	}
 }
 
-pub fn paramet(edges: &mut Gmatrix, fx: &Fn(f32) -> f32, fy: &Fn(f32) -> f32, step: f32) {
-	println!("{}", step);
+fn circle_x(t: f32) -> f32 {
+	return 250.0+100.0*t.cos();
+}
+
+fn circle_y(t: f32) -> f32 {
+	return 250.0+100.0*t.sin();
+}
+
+fn paramet(edges: &mut Gmatrix, fx: &Fn(f32) -> f32, fy: &Fn(f32) -> f32, step: f32) {
+	println!("step {}", step);
+	let mut t = 0.0;
+	let mut x0 = -1.0;
+	let mut y0 = -1.0;
+	while t <= 1.001 {
+		let x1 = fx(t);
+		let y1 = fy(t);
+		println!("x: {} y: {}", x1, y1);
+		if t>0.00 {
+			println!("Adding edge! t={}",t);
+			edges.add_edge(x0 as i32,y0 as i32,0,x1 as i32,y1 as i32,0);
+		}
+		x0 = x1;
+		y0 = y1;
+		t += step;
+	}
 }
 
 pub fn add_curve(edges: &mut Gmatrix, x0:f32,y0:f32,x1:f32,y1:f32,a5:f32,a6:f32,a7:f32,a8:f32,tp:&str) {
@@ -129,8 +152,9 @@ pub fn add_curve(edges: &mut Gmatrix, x0:f32,y0:f32,x1:f32,y1:f32,a5:f32,a6:f32,
 	}
 	//giv.print();
 	c.print();
+	//paramet(edges, )
 }
 
 pub fn add_circle(edges: &mut Gmatrix, cx: f32, cy: f32, cz: f32, r: f32) {
-	println!("drawing circle!");
+	paramet(edges, &circle_x, &circle_y, 0.01);
 }
