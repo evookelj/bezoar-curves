@@ -129,6 +129,7 @@ fn paramet(edges: &mut Gmatrix, fx: &Fn(f32) -> f32, fy: &Fn(f32) -> f32, step: 
 		if t>0.00 {
 			println!("Adding edge! t={}",t);
 			edges.add_edge(x0 as i32,y0 as i32,0,x1 as i32,y1 as i32,0);
+			edges.add_edge(500-x0 as i32,500-y0 as i32,0,500-x1 as i32,500-y1 as i32,0);
 		}
 		x0 = x1;
 		y0 = y1;
