@@ -119,12 +119,12 @@ fn circle_y(t: f32, cy: f32, r: f32) -> f32 {
 	return cy+r*d.to_radians().sin()
 }
 
-fn curve_x(t: f32, a: f32, b: f32, c: f32, d: f32) {
-
+fn curve_x(t: f32, a: f32, b: f32, c: f32, d: f32) -> f32 {
+	return t;
 }
 
-fn curve_y(t: f32, a: f32, b: f32, c: f32, d: f32) {
-
+fn curve_y(t: f32, a: f32, b: f32, c: f32, d: f32) -> f32 {
+	return a*t*t*t+b*t*t+c*t+d;
 }
 
 fn paramet_circ(edges: &mut Gmatrix, fx: &Fn(f32,f32,f32) -> f32, fy: &Fn(f32,f32,f32) -> f32, circ: [f32; 4], step: f32) {
@@ -143,8 +143,21 @@ fn paramet_circ(edges: &mut Gmatrix, fx: &Fn(f32,f32,f32) -> f32, fy: &Fn(f32,f3
 	}
 }
 
-fn paramet_curve(edges: &mut Gmatrix, fx: &Fn(f32) -> f32, fy: &Fn(f32) -> f32, step: f32) {
-	println!("Parametric curve!");
+fn paramet_curve(edges: &mut Gmatrix, a: f32, b: f32, c: f32, d: f32, fx: &Fn(f32,f32,f32,f32,f32) -> f32, fy: &Fn(f32,f32,f32,f32,f32) -> f32, step: f32) {
+	let mut t = 0.0;
+	let mut x0 = -1.0;
+	let mut y0 = -1.0;
+	while t <= 1.001 {
+		let x1 = fx(t,a,b,c,d);
+		let y1 = fx(t,a,b,c,d);
+		if t>0.00 {
+			println!("Adding edge {} {} to {} {}", x0,y0,x1,y1);
+			edges.add_edge(x0 as i32, y0 as i32, 0, x1 as i32, y1 as i32, 0);
+		}
+		x0 = x1;
+		y0 = y1;
+		t += step;
+	}
 }
 
 pub fn add_curve(edges: &mut Gmatrix, x0:f32,y0:f32,x1:f32,y1:f32,a5:f32,a6:f32,a7:f32,a8:f32,tp:&str) {
@@ -166,6 +179,7 @@ pub fn add_curve(edges: &mut Gmatrix, x0:f32,y0:f32,x1:f32,y1:f32,a5:f32,a6:f32,
 	//giv.print();
 	c.print();
 	//paramet(edges, )
+	paramet_curve(edges,c.get_val(0,0),c.get_val(1,0),c.get_val(2,0),c.get_val(3,0), &curve_x, &curve_y, 0.01);;
 }
 
 pub fn add_circle(edges: &mut Gmatrix, cx: f32, cy: f32, cz: f32, r: f32) {
