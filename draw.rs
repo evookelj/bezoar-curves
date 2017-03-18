@@ -109,32 +109,39 @@ pub fn draw_lines(gm: &mut Gmatrix, screen: &mut [[[u32; 3]; 500]; 500], color: 
 	}
 }
 
-fn circle_x(t: f32) -> f32 {
-	return 250.0+100.0*t.cos();
+fn circle_x(t: f32, cx: f32, r: f32) -> (f32,f32) {
+	let d = t*90.0;
+	return (cx+r*d.to_radians().cos(),cx-r*d.to_radians().cos());
 }
 
-fn circle_y(t: f32) -> f32 {
-	return 250.0+100.0*t.sin();
+fn circle_y(t: f32, cy: f32, r: f32) -> (f32,f32) {
+	let d = t*90.0;
+	return (cy+r*d.to_radians().sin(), cy-r*d.to_radians().sin())
 }
 
-fn paramet(edges: &mut Gmatrix, fx: &Fn(f32) -> f32, fy: &Fn(f32) -> f32, step: f32) {
+fn paramet_circ(edges: &mut Gmatrix, fx: &Fn(f32,f32,f32) -> (f32,f32), fy: &Fn(f32,f32,f32) -> (f32,f32), circ: [f32; 4], step: f32) {
+	//circ: [cx,cy,cz,r]
 	println!("step {}", step);
 	let mut t = 0.0;
 	let mut x0 = -1.0;
 	let mut y0 = -1.0;
+	let mut x1 = -1.0;
+	let mut y1 = -1.0;
 	while t <= 1.001 {
-		let x1 = fx(t);
-		let y1 = fy(t);
+		let (x2,x3) = fx(t, circ[0], circ[3]);
+		let (y2,y3) = fy(t, circ[1], circ[3]);
 		println!("x: {} y: {}", x1, y1);
 		if t>0.00 {
 			println!("Adding edge! t={}",t);
-			edges.add_edge(x0 as i32,y0 as i32,0,x1 as i32,y1 as i32,0);
-			edges.add_edge(500-x0 as i32,500-y0 as i32,0,500-x1 as i32,500-y1 as i32,0);
-			edges.add_edge(500-x0 as i32,y0 as i32,0,500-x1 as i32,y1 as i32,0);
-			edges.add_edge(x0 as i32,500-y0 as i32,0,x1 as i32,500-y1 as i32,0);
+			edges.add_edge(x0 as i32,y0 as i32,0,x2 as i32,y2 as i32,0);
+			edges.add_edge(x1 as i32, y1 as i32,0,x3 as i32, y3 as i32,0);
+			edges.add_edge(x1 as i32, y0 as i32,0, x3 as i32, y2 as i32, 0);
+			edges.add_edge(x0 as i32, y1 as i32,0, x2 as i32, y3 as i32, 0);
 		}
-		x0 = x1;
-		y0 = y1;
+		x0 = x2;
+		y0 = y2;
+		x1 = x3;
+		y1 = y3;
 		t += step;
 	}
 }
@@ -159,5 +166,5 @@ pub fn add_curve(edges: &mut Gmatrix, x0:f32,y0:f32,x1:f32,y1:f32,a5:f32,a6:f32,
 }
 
 pub fn add_circle(edges: &mut Gmatrix, cx: f32, cy: f32, cz: f32, r: f32) {
-	paramet(edges, &circle_x, &circle_y, 0.01);
+	paramet_circ(edges, &circle_x, &circle_y, [cx,cy,cz,r], 0.01);
 }
