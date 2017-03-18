@@ -109,14 +109,14 @@ pub fn draw_lines(gm: &mut Gmatrix, screen: &mut [[[u32; 3]; 500]; 500], color: 
 	}
 }
 
-fn circle_x(t: f32, cx: f32, r: f32) -> (f32,f32) {
-	let d = t*90.0;
-	return (cx+r*d.to_radians().cos(),cx-r*d.to_radians().cos());
+fn circle_x(t: f32, cx: f32, r: f32) -> f32 {
+	let d = t*360.0;
+	return cx+r*d.to_radians().cos()
 }
 
-fn circle_y(t: f32, cy: f32, r: f32) -> (f32,f32) {
-	let d = t*90.0;
-	return (cy+r*d.to_radians().sin(), cy-r*d.to_radians().sin())
+fn circle_y(t: f32, cy: f32, r: f32) -> f32 {
+	let d = t*360.0;
+	return cy+r*d.to_radians().sin()
 }
 
 fn curve_x(t: f32, a: f32, b: f32, c: f32, d: f32) {
@@ -127,25 +127,18 @@ fn curve_y(t: f32, a: f32, b: f32, c: f32, d: f32) {
 
 }
 
-fn paramet_circ(edges: &mut Gmatrix, fx: &Fn(f32,f32,f32) -> (f32,f32), fy: &Fn(f32,f32,f32) -> (f32,f32), circ: [f32; 4], step: f32) {
+fn paramet_circ(edges: &mut Gmatrix, fx: &Fn(f32,f32,f32) -> f32, fy: &Fn(f32,f32,f32) -> f32, circ: [f32; 4], step: f32) {
 	let mut t = 0.0;
 	let mut x0 = -1.0;
 	let mut y0 = -1.0;
-	let mut x1 = -1.0;
-	let mut y1 = -1.0;
 	while t <= 1.001 {
-		let (x2,x3) = fx(t, circ[0], circ[3]);
-		let (y2,y3) = fy(t, circ[1], circ[3]);
+		let x1 = fx(t, circ[0], circ[3]);
+		let y1 = fy(t, circ[1], circ[3]);
 		if t>0.00 {
-			edges.add_edge(x0 as i32,y0 as i32,0,x2 as i32,y2 as i32,0);
-			edges.add_edge(x1 as i32, y1 as i32,0,x3 as i32, y3 as i32,0);
-			edges.add_edge(x1 as i32, y0 as i32,0, x3 as i32, y2 as i32, 0);
-			edges.add_edge(x0 as i32, y1 as i32,0, x2 as i32, y3 as i32, 0);
+			edges.add_edge(x0 as i32,y0 as i32,0,x1 as i32,y1 as i32,0);
 		}
-		x0 = x2;
-		y0 = y2;
-		x1 = x3;
-		y1 = y3;
+		x0 = x1;
+		y0 = y1;
 		t += step;
 	}
 }
