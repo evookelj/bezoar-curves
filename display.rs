@@ -10,6 +10,7 @@ pub const DEFAULT: [u32; 3] = [0,0,0];
 
 pub fn plot(x: i32, y:i32, screen: &mut [[[u32; 3]; 500]; 500], color: [u32; 3]) {
 	if x>(XRES as i32)-1 || y>(YRES as i32)-1 {
+		println!("x {} y {}", x,y);
 		println!("skip");
 		return ;
 	}
