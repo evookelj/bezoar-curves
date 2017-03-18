@@ -160,10 +160,12 @@ pub fn add_curve(edges: &mut Gmatrix, x0:f32,y0:f32,x1:f32,y1:f32,a5:f32,a6:f32,
 	giv.add_val(0,x0);
 	giv.add_val(1,x1);
 	if (tp=="b") {
+		//R THESE RIGHT?? IDK
 		giv.add_val(2,a5);
 		giv.add_val(3,a7);
 		c = get_bezier(&giv);
 	} else {
+		//these feel more right but i also dk
 		giv.add_val(2,a6/a5);
 		giv.add_val(3,a8/a7);
 		c = get_hermite(&giv);
