@@ -187,7 +187,6 @@ pub fn get_hermite(givens: &Gmatrix) -> Gmatrix {
 	h.add_val(3,1.0);
 	for _ in 0..3 { h.add_val(3,0.0); }
 
-	h.print();
 	return h.m_mult(givens);
 
 }
