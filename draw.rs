@@ -151,13 +151,13 @@ fn paramet_circ(edges: &mut Gmatrix, fx: &Fn(f32,f32,f32) -> f32, fy: &Fn(f32,f3
 
 fn paramet_curve(edges: &mut Gmatrix, cx: &Gmatrix, cy: &Gmatrix, fx: &Fn(f32,&Gmatrix) -> f32, fy: &Fn(f32,&Gmatrix) -> f32, step: f32) {
 	let mut t = 0.0;
-	let mut x0 = cx.get_val(3,0);
-	let mut y0 = cy.get_val(3,0);
+	let mut x0 = -1.0;
+	let mut y0 = -1.0;
 	while t <= 1.001 {
 		let x1 = fx(t,cx);
 		let y1 = fy(t,cy);
 		//println!("Adding edge {} {} to {} {}", x0,y0,x1,y1);
-		edges.add_edge(x0 as i32, y0 as i32, 0, x1 as i32, y1 as i32, 0);
+		if t>0.0 { edges.add_edge(x0 as i32, y0 as i32, 0, x1 as i32, y1 as i32, 0); }
 		x0 = x1;
 		y0 = y1;
 		t += step;

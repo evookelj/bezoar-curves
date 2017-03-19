@@ -168,7 +168,6 @@ pub fn make_rot_z(theta: f32) -> Gmatrix {
 }
 
 pub fn get_hermite(givens: &Gmatrix) -> Gmatrix {
-	//make hermite inverse Matrix
 	let mut h = Gmatrix::new();
 
 	h.add_val(0,2.0);
@@ -178,8 +177,8 @@ pub fn get_hermite(givens: &Gmatrix) -> Gmatrix {
 
 	h.add_val(1,-3.0);
 	h.add_val(1,3.0);
-	h.add_val(1,2.0);
-	h.add_val(1,1.0);
+	h.add_val(1,-2.0);
+	h.add_val(1,-1.0);
 
 	for _ in 0..2 { h.add_val(2,0.0); }
 	h.add_val(2,1.0);
@@ -188,12 +187,12 @@ pub fn get_hermite(givens: &Gmatrix) -> Gmatrix {
 	h.add_val(3,1.0);
 	for _ in 0..3 { h.add_val(3,0.0); }
 
+	h.print();
 	return h.m_mult(givens);
 
 }
 
 pub fn get_bezier(givens: &Gmatrix) -> Gmatrix {
-	//make bezier matrix
 	let mut b = Gmatrix::new();
 
 	b.add_val(0,-1.0);
