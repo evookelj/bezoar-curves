@@ -81,6 +81,7 @@ impl Gmatrix {
 		o.data = self.m_mult(o).data;
 	}
 
+/*
 	pub fn s_mult(&self, s: f32) -> Gmatrix {
 		let mut ret = Gmatrix::new();
 		for r in 0..self.rlen() {
@@ -90,6 +91,7 @@ impl Gmatrix {
 		}
 		return ret;
 	}
+	*/
 
 	pub fn add_pt(&mut self, x0: i32, y0: i32, z0: i32) {
 		if y0<0 {

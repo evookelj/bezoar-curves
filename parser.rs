@@ -85,14 +85,14 @@ pub fn parse_file(name: &str, transf: &mut Gmatrix, edges: &mut Gmatrix, screen:
 			}
 			"hermite" => {
 				add_curve(edges,
-					vec[0].parse().unwrap(),
-					vec[1].parse().unwrap(),
-					vec[2].parse().unwrap(),
-					vec[3].parse().unwrap(),
-					vec[4].parse().unwrap(),
-					vec[5].parse().unwrap(),
-					vec[6].parse().unwrap(),
-					vec[7].parse().unwrap(),
+					vec[0].parse().unwrap(), //x0
+					vec[1].parse().unwrap(), //y0
+					vec[2].parse().unwrap(), //x1
+					vec[3].parse().unwrap(), //y1
+					vec[4].parse().unwrap(), //rx0
+					vec[5].parse().unwrap(), //ry0
+					vec[6].parse().unwrap(), //rx1
+					vec[7].parse().unwrap(), //ry1
 					"h");
 				last = String::from("");
 			}

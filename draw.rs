@@ -119,12 +119,18 @@ fn circle_y(t: f32, cy: f32, r: f32) -> f32 {
 	return cy+r*d.to_radians().sin()
 }
 
-fn curve_x(t: f32, a: f32, b: f32, c: f32, d: f32) -> f32 {
-	return t;
+fn curve_x(t: f32, cx: &Gmatrix) -> f32 {
+	let a = cx.get_val(0,0);
+	let b = cx.get_val(1,0);
+	let c = cx.get_val(2,0);
+	let d = cx.get_val(3,0);
+	//println!("{}t^3+{}t^2+{}t+{}",a,b,c,d );
+	return a*t*t*t+b*t*t+c*t+d;
 }
 
-fn curve_y(t: f32, a: f32, b: f32, c: f32, d: f32) -> f32 {
-	return a*t*t*t+b*t*t+c*t+d;
+fn curve_y(t: f32, cy: &Gmatrix) -> f32 {
+	//println!("Y: ");
+	return curve_x(t, cy);
 }
 
 fn paramet_circ(edges: &mut Gmatrix, fx: &Fn(f32,f32,f32) -> f32, fy: &Fn(f32,f32,f32) -> f32, circ: [f32; 4], step: f32) {
@@ -143,17 +149,15 @@ fn paramet_circ(edges: &mut Gmatrix, fx: &Fn(f32,f32,f32) -> f32, fy: &Fn(f32,f3
 	}
 }
 
-fn paramet_curve(edges: &mut Gmatrix, a: f32, b: f32, c: f32, d: f32, fx: &Fn(f32,f32,f32,f32,f32) -> f32, fy: &Fn(f32,f32,f32,f32,f32) -> f32, step: f32) {
+fn paramet_curve(edges: &mut Gmatrix, cx: &Gmatrix, cy: &Gmatrix, fx: &Fn(f32,&Gmatrix) -> f32, fy: &Fn(f32,&Gmatrix) -> f32, step: f32) {
 	let mut t = 0.0;
-	let mut x0 = -1.0;
-	let mut y0 = -1.0;
+	let mut x0 = cx.get_val(3,0);
+	let mut y0 = cy.get_val(3,0);
 	while t <= 1.001 {
-		let x1 = fx(t,a,b,c,d);
-		let y1 = fx(t,a,b,c,d);
-		if t>0.00 {
-			println!("Adding edge {} {} to {} {}", x0,y0,x1,y1);
-			edges.add_edge(x0 as i32, y0 as i32, 0, x1 as i32, y1 as i32, 0);
-		}
+		let x1 = fx(t,cx);
+		let y1 = fy(t,cy);
+		//println!("Adding edge {} {} to {} {}", x0,y0,x1,y1);
+		edges.add_edge(x0 as i32, y0 as i32, 0, x1 as i32, y1 as i32, 0);
 		x0 = x1;
 		y0 = y1;
 		t += step;
@@ -161,25 +165,30 @@ fn paramet_curve(edges: &mut Gmatrix, a: f32, b: f32, c: f32, d: f32, fx: &Fn(f3
 }
 
 pub fn add_curve(edges: &mut Gmatrix, x0:f32,y0:f32,x1:f32,y1:f32,a5:f32,a6:f32,a7:f32,a8:f32,tp:&str) {
-	let mut giv = Gmatrix::new();
-	let c;
-	giv.add_val(0,x0);
-	giv.add_val(1,x1);
-	if (tp=="b") {
-		//R THESE RIGHT?? IDK
-		giv.add_val(2,a5);
-		giv.add_val(3,a7);
-		c = get_bezier(&giv);
+	let mut givx = Gmatrix::new();
+	let mut givy = Gmatrix::new();
+	let cx;
+	let cy;
+
+	givx.add_val(0,x0);
+	givx.add_val(1,x1);
+	givx.add_val(2,a5);
+	givx.add_val(3,a7);
+	//givx rows: [x0, x1, rx0, rx1]
+
+	givy.add_val(0,y0);
+	givy.add_val(1,y1);
+	givy.add_val(2,a6);
+	givy.add_val(3,a8);
+
+	if tp=="h" {
+		cx = get_hermite(&givx);
+		cy = get_hermite(&givy);
 	} else {
-		//these feel more right but i also dk
-		giv.add_val(2,a6/a5);
-		giv.add_val(3,a8/a7);
-		c = get_hermite(&giv);
+		cx = get_bezier(&givx);
+		cy = get_bezier(&givy);
 	}
-	//giv.print();
-	c.print();
-	//paramet(edges, )
-	paramet_curve(edges,c.get_val(0,0),c.get_val(1,0),c.get_val(2,0),c.get_val(3,0), &curve_x, &curve_y, 0.01);;
+	paramet_curve(edges, &cx, &cy, &curve_x, &curve_y, 0.01);
 }
 
 pub fn add_circle(edges: &mut Gmatrix, cx: f32, cy: f32, cz: f32, r: f32) {
