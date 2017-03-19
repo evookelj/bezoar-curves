@@ -18,8 +18,6 @@ ident
 
 # EYES AND GLASSES
 circle
-250 250 0 200
-circle
 175 325 0 50
 circle
 325 325 0 50
@@ -29,10 +27,26 @@ circle
 325 325 0 10
 line
 225 325 0 275 325 0
+line
+70 375 0 125 325 0
+line
+375 325 0 430 375 0
+move
+0 -30 0
+apply
+ident
 
 # SCAR
 line 
-305 380 0 325 400 0
+305 360 0 325 390 0
+line
+325 390 0 305 390 0
+line
+305 390 0 325 420 0
+
+# HEAD
+circle
+250 250 0 200
 
 apply
 display
